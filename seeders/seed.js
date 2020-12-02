@@ -135,13 +135,41 @@ let workoutSeed = [
 	}
 ];
 
-db.Workout.deleteMany({})
-	.then(() => db.Workout.collection.insertMany(workoutSeed))
-	.then(data => {
-		console.log(data.result.n + " records inserted!");
+async function createWorkout(index) {
+	try {
+		let exercise = await db.Exercise.create(workoutSeed[index].exercises[0]);
+		await db.Workout.create({
+			day: workoutSeed[index].day,
+			exercises: [exercise._id]
+		});
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+async function plantSeeds() {
+	try {
+		await db.Workout.deleteMany();
+		await db.Exercise.deleteMany();
+		for (var i = 0; i < workoutSeed.length; i++) {
+			await createWorkout(i);
+		}
 		process.exit(0);
-	})
-	.catch(err => {
-		console.error(err);
-		process.exit(1);
-	});
+	} catch (error) {
+		console.log(error);
+		process.exit(-1);
+	}
+}
+
+plantSeeds();
+
+// db.Workout.deleteMany({})
+// 	.then(() => db.Workout.collection.insertMany(workoutSeed))
+// 	.then(data => {
+// 		console.log(data.result.n + " records inserted!");
+// 		process.exit(0);
+// 	})
+// 	.catch(err => {
+// 		console.error(err);
+// 		process.exit(1);
+// 	});
