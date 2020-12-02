@@ -12,7 +12,7 @@ const exerciseSchema = new Schema({
 	duration: {
 		type: Number
 	},
-	weights: {
+	weight: {
 		type: Number
 	},
 	sets: {
