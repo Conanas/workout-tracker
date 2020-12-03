@@ -208,10 +208,22 @@ function duration(data) {
 function calculateTotalWeight(data) {
 	let total = [];
 
-	data.forEach(workout => {
-		workout.exercises.forEach(exercise => {
-			total.push(exercise.weight);
+	dateLabels.forEach(label => {
+		let result = data.filter(obj => {
+			if (moment(obj.day).format("ddd DD/MM/YY") === label) {
+				return obj;
+			}
 		});
+
+		if (result.length != 0) {
+			let totalResult = result.reduce((acc, curr) => {
+				acc.totalWeight = (acc.totalWeight || 0) + curr.totalWeight;
+				return acc;
+			});
+			total.push(totalResult.totalWeight);
+		} else {
+			total.push(0);
+		}
 	});
 
 	return total;
