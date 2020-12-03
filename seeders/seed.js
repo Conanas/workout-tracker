@@ -160,6 +160,7 @@ async function createWorkout(index) {
 			exercises: exerciseIds
 		});
 		workout.totalDuration = workout.setTotalDuration(exercises);
+		workout.totalWeight = workout.setTotalWeight(exercises);
 		await db.Workout.create(workout);
 	} catch (error) {
 		console.log(error);
