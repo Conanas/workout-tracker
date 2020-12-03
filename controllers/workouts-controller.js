@@ -24,6 +24,7 @@ module.exports = function (app) {
 	app.post("/api/workouts", async function (req, res) {
 		try {
 			req.body.totalDuration = 0;
+			req.body.totalWeight = 0;
 			let workouts = await db.Workout.create(req.body);
 			res.json(workouts);
 		} catch (error) {
@@ -36,7 +37,8 @@ module.exports = function (app) {
 			let id = req.params.id;
 			let exercise = await db.Exercise.create(req.body);
 			let exerciseDuration = exercise.duration;
-			let workout = await db.Workout.updateOne({ _id: id }, { $push: { exercises: exercise._id }, $inc: { totalDuration: exerciseDuration } });
+			let exerciseWeight = exercise.weight || 0;
+			let workout = await db.Workout.updateOne({ _id: id }, { $push: { exercises: exercise._id }, $inc: { totalDuration: exerciseDuration, totalWeight: exerciseWeight } });
 			res.json(workout);
 		} catch (error) {
 			console.log(error);
