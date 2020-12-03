@@ -1,3 +1,4 @@
+const moment = require("moment");
 let db = require("../models");
 
 module.exports = function (app) {
@@ -13,7 +14,7 @@ module.exports = function (app) {
 
 	app.get("/api/workouts/range", async (req, res) => {
 		try {
-			let workouts = await db.Workout.find().populate("exercises");
+			let workouts = await db.Workout.find({ day: { $gte: moment().subtract(7, "days") } }).populate("exercises");
 			res.json(workouts);
 		} catch (error) {
 			console.log(error);
