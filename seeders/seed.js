@@ -1,4 +1,5 @@
 let mongoose = require("mongoose");
+const { Workout } = require("../models");
 let db = require("../models");
 
 mongoose.connect("mongodb://localhost/workout", {
@@ -139,11 +140,15 @@ let workoutSeed = [
 
 async function createWorkout(index) {
 	try {
+		let exercises = [];
 		let exercise = await db.Exercise.create(workoutSeed[index].exercises[0]);
-		await db.Workout.create({
+		exercises.push(exercise);
+		let workout = new Workout({
 			day: workoutSeed[index].day,
 			exercises: [exercise._id]
 		});
+		workout.totalDuration = workout.setTotalDuration(exercises);
+		await db.Workout.create(workout);
 	} catch (error) {
 		console.log(error);
 	}
