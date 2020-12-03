@@ -1,5 +1,7 @@
 // get all workout data from back-end
 
+let dateLabels = [];
+
 fetch("/api/workouts/range")
 	.then(response => {
 		return response.json();
@@ -10,6 +12,15 @@ fetch("/api/workouts/range")
 
 
 API.getWorkoutsInRange();
+
+function createDateLabels() {
+	for (let i = 6; i >= 0; i--) {
+		let date = moment().subtract(i, "days").format("ddd DD/MM/YY");
+		dateLabels.push(date);
+	}
+}
+
+createDateLabels();
 
 function generatePalette() {
 	const arr = [
@@ -47,15 +58,7 @@ function populateChart(data) {
 	let lineChart = new Chart(line, {
 		type: "line",
 		data: {
-			labels: [
-				"Sunday",
-				"Monday",
-				"Tuesday",
-				"Wednesday",
-				"Thursday",
-				"Friday",
-				"Saturday"
-			],
+			labels: dateLabels,
 			datasets: [
 				{
 					label: "Workout Duration In Minutes",
@@ -95,15 +98,7 @@ function populateChart(data) {
 	let barChart = new Chart(bar, {
 		type: "bar",
 		data: {
-			labels: [
-				"Sunday",
-				"Monday",
-				"Tuesday",
-				"Wednesday",
-				"Thursday",
-				"Friday",
-				"Saturday",
-			],
+			labels: dateLabels,
 			datasets: [
 				{
 					label: "Pounds",
@@ -151,7 +146,7 @@ function populateChart(data) {
 			labels: workouts,
 			datasets: [
 				{
-					label: "Excercises Performed",
+					label: "Exercises Performed",
 					backgroundColor: colors,
 					data: durations
 				}
@@ -160,7 +155,7 @@ function populateChart(data) {
 		options: {
 			title: {
 				display: true,
-				text: "Excercises Performed"
+				text: "Exercises Performed"
 			}
 		}
 	});
@@ -171,7 +166,7 @@ function populateChart(data) {
 			labels: workouts,
 			datasets: [
 				{
-					label: "Excercises Performed",
+					label: "Exercises Performed",
 					backgroundColor: colors,
 					data: pounds
 				}
@@ -180,7 +175,7 @@ function populateChart(data) {
 		options: {
 			title: {
 				display: true,
-				text: "Excercises Performed"
+				text: "Exercises Performed"
 			}
 		}
 	});
@@ -190,6 +185,7 @@ function duration(data) {
 	let durations = [];
 
 	data.forEach(workout => {
+		console.log(workout.day);
 		workout.exercises.forEach(exercise => {
 			durations.push(exercise.duration);
 		});
