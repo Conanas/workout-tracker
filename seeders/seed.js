@@ -133,6 +133,14 @@ let workoutSeed = [
 				weight: 300,
 				reps: 10,
 				sets: 4
+			},
+			{
+				type: "resistance",
+				name: "Military Press",
+				duration: 20,
+				weight: 300,
+				reps: 10,
+				sets: 4
 			}
 		]
 	}
@@ -141,11 +149,15 @@ let workoutSeed = [
 async function createWorkout(index) {
 	try {
 		let exercises = [];
-		let exercise = await db.Exercise.create(workoutSeed[index].exercises[0]);
-		exercises.push(exercise);
+		let exerciseIds = [];
+		for (let i = 0; i < workoutSeed[index].exercises.length; i++) {
+			let exercise = await db.Exercise.create(workoutSeed[index].exercises[i]);
+			exercises.push(exercise);
+			exerciseIds.push(exercise._id);
+		}
 		let workout = new Workout({
 			day: workoutSeed[index].day,
-			exercises: [exercise._id]
+			exercises: exerciseIds
 		});
 		workout.totalDuration = workout.setTotalDuration(exercises);
 		await db.Workout.create(workout);
