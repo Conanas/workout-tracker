@@ -184,11 +184,22 @@ function populateChart(data) {
 function duration(data) {
 	let durations = [];
 
-	data.forEach(workout => {
-		console.log(workout.day);
-		workout.exercises.forEach(exercise => {
-			durations.push(exercise.duration);
+	dateLabels.forEach(label => {
+		let result = data.filter(obj => {
+			if (moment(obj.day).format("ddd DD/MM/YY") === label) {
+				return obj;
+			}
 		});
+
+		if (result.length != 0) {
+			let totalResult = result.reduce((acc, curr) => {
+				acc.totalDuration = (acc.totalDuration || 0) + curr.totalDuration;
+				return acc;
+			});
+			durations.push(totalResult.totalDuration);
+		} else {
+			durations.push(0);
+		}
 	});
 
 	return durations;
